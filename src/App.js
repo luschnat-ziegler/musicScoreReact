@@ -12,6 +12,7 @@ import {sortAbc} from "./services/TransformData";
 import {Route, Routes} from "react-router-dom";
 import ScoreList from "./pages/ScoreList";
 import ListCreation from "./pages/ListCreation";
+import ScoreCreation from "./pages/ScoreCreation";
 
 const theme = {
     global: {
@@ -50,6 +51,7 @@ function App() {
                     <Routes>
                         <Route path="/pdf" element={<ListCreation data={scores.data}/>}/>
                         <Route path="/" element={<ScoreList data={scores.data}/>}/>
+                        <Route path="/create" element={<ScoreCreation data={scores.data}/>}/>
                     </Routes>
                 </PageContent>
             </Page>
