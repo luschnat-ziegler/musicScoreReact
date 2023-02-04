@@ -56,7 +56,7 @@ export default function ScoreList({data}) {
                     onClose={onClose}
                     onOpen={onOpen}
                     dropContent={<Box pad="small">
-                        <Box direction="row" justify="between" align="center">
+                        <Box gap="small" direction="row" justify="between" align="center">
                             <Heading level={4} margin="small">
                                 Filteroptionen
                             </Heading>

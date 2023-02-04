@@ -51,7 +51,8 @@ function App() {
                     <Routes>
                         <Route path="/pdf" element={<ListCreation data={scores.data}/>}/>
                         <Route path="/" element={<ScoreList data={scores.data}/>}/>
-                        <Route path="/create" element={<ScoreCreation data={scores.data}/>}/>
+                        <Route path="/create" element={<ScoreCreation data={scores.data} dataChange={dataChange}
+                                                                      setDataChange={setDataChange}/>}/>
                     </Routes>
                 </PageContent>
             </Page>

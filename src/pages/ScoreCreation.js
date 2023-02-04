@@ -1,10 +1,14 @@
-import {Box, Tab, Tabs, TextInput} from "grommet";
+import {Box, Tab, Tabs} from "grommet";
 import TitleInput from "../components/TitleInput";
 import {useState} from "react";
+import ComposerInput from "../components/ComposerInput";
+import CategoryInput from "../components/CategoryInput";
 
-export default function ScoreCreation({data}) {
+export default function ScoreCreation({data, dataChange, setDataChange}) {
     const [formData, setFormData] = useState({
-        title: ""
+        title: "",
+        composers: [],
+        category: 0
     })
 
     return (
@@ -16,10 +20,15 @@ export default function ScoreCreation({data}) {
                     </Box>
                 </Tab>
                 <Tab title="Komponist(en)">
-                    <Box pad="medium" align="center">Two</Box>
+                    <Box pad="medium">
+                        <ComposerInput data={data} formData={formData} setFormData={setFormData} dataChange={dataChange}
+                                       setDataChange={setDataChange}/>
+                    </Box>
                 </Tab>
                 <Tab title="Kategorie">
-                    <Box pad="medium">Two</Box>
+                    <Box pad="medium">
+                        <CategoryInput formData={formData} setFormData={setFormData} dataChange={dataChange}/>
+                    </Box>
                 </Tab>
                 <Tab title="Tags">
                     <Box pad="medium">Two</Box>
