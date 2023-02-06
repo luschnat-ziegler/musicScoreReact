@@ -37,11 +37,17 @@ function getLabel(item, type) {
     if (type === "composer") {
         return (item.FirstName + " " + item.LastName)
     }
+    if (type === "tag") {
+        return item.Content
+    }
 }
 
 function getNewCreationLabel(type) {
     if (type === "composer") {
         return "Bitte Komponist*in neu anlegen"
+    }
+    if (type === "tag") {
+        return "Bitte Tag neu anlegen"
     }
 }
 
@@ -53,11 +59,20 @@ function getSelectedItem(type, filteredData, currentData, value) {
             LastName: currentData.lastName
         }
     }
+    if (type === "tag") {
+        return value !== "0" ? filteredData.find(tag => String(tag.ID) === value) : {
+            ID: uuidv4(),
+            Content: currentData
+        }
+    }
 }
 
 function getCurrentFormData(formData, type) {
     if (type === "composer") {
         return formData.composers
+    }
+    if (type === "tag") {
+        return formData.tags
     }
 }
 
@@ -69,11 +84,20 @@ function getItemToAdd(addedItem, type) {
             id: addedItem.ID
         }
     }
+    if (type === "tag") {
+        return {
+            id: addedItem.ID,
+            content: addedItem.Content
+        }
+    }
 }
 
 function getDataForFormUpdate(type, updatedFormData) {
     if (type === "composer") {
         return {composers: updatedFormData}
+    }
+    if (type === "tags") {
+        return {tags: updatedFormData}
     }
 }
 
@@ -83,5 +107,8 @@ function getResetInputObject(type) {
             firstName: "",
             lastName: ""
         }
+    }
+    if (type === "tag") {
+        return ""
     }
 }

@@ -23,12 +23,17 @@ const CollapsableNav = () => (
                                 label: <StyledLink to='/pdf'>PDF erstellen</StyledLink>, onClick: () => {
                                 }
                             },
+                            {
+                                label: <StyledLink to='/create'>Noten anlegen</StyledLink>, onClick: () => {
+                                }
+                            },
                         ]}
                     />
                 ) : (
                     <Nav direction="row">
                         <StyledLink to='/'>Noten Finden</StyledLink>
                         <StyledLink to='/pdf'>PDF erstellen</StyledLink>
+                        <StyledLink to='/create'>Noten anlegen</StyledLink>
                     </Nav>
                 )
             }
