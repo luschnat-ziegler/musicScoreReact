@@ -12,10 +12,21 @@ import {
     TextInput
 } from "grommet";
 import {useState} from "react";
+import SuggestionList from "./SuggestionList";
 
-export default function StorageInput({data, existingData, formData, setFormData, isConfirmed, setIsConfirmed}) {
+export default function StorageInput({
+                                         data,
+                                         existingData,
+                                         formData,
+                                         setFormData,
+                                         isConfirmed,
+                                         setIsConfirmed,
+                                         compilationData
+                                     }) {
     const [isPartOfCompilation, setIsPartOfCompilation] = useState(false)
+    const [currentCompilationData, setCurrentCompilationData] = useState("")
     const [validationError, setValidationError] = useState("")
+    const filteredCompilations = compilationData.filter(item => currentCompilationData.length > 1 && item.Title.toLowerCase().includes(currentCompilationData.toLowerCase()))
     let options = [
         {label: "Bitte Schrank wählen", value: 0}
     ]
@@ -25,8 +36,23 @@ export default function StorageInput({data, existingData, formData, setFormData,
             {!isConfirmed && <CheckBox
                 checked={isPartOfCompilation}
                 label="Dieses Stück ist Teil einer Zusammenstellung"
-                onChange={(event) => setIsPartOfCompilation(event.target.checked)}
+                onChange={(event) => {
+                    setIsPartOfCompilation(event.target.checked)
+                    if (!event.target.checked) {
+                        setFormData({
+                            ...formData, compilationId: null, compilationTitle: null, storageDivision: 0,
+                            storageSubDivision: ""
+                        })
+                    }
+                }}
             />}
+            {!isConfirmed && isPartOfCompilation &&
+                <TextInput placeholder="Titel der Zusammenstellung" value={currentCompilationData}
+                           onChange={(event) => setCurrentCompilationData(event.target.value)}/>}
+            {!isConfirmed && isPartOfCompilation && filteredCompilations.length > 0 &&
+                <SuggestionList formData={formData} setFormData={setFormData} currentData={currentCompilationData}
+                                setCurrentData={setCurrentCompilationData} filteredData={filteredCompilations}
+                                type={"compilation"}/>}
             {!isConfirmed && <Select
                 options={options}
                 value={options.find(item => item.value === formData.storageDivision)}
@@ -62,6 +88,7 @@ export default function StorageInput({data, existingData, formData, setFormData,
                     setValidationError("Dieser Lagerort ist bereits belegt")
                     return
                 }
+                setFormData({...formData, storageDivisionName: options.find(item => item.value === formData.storageDivision).label})
                 setIsConfirmed(true)
             }
             }/>}
@@ -81,11 +108,19 @@ function checkIfOccupied(divisionId, subdivision, scoreData) {
 function ConfirmedInfoBox({formData, optionsMap, setIsConfirmed, setFormData}) {
     const divisionItem = optionsMap.find(item => item.value === formData.storageDivision)
     return (
-        <Card height="small" width="large" background="light-1">
+        <Card height="medium" width="large" background="light-1">
             <CardHeader pad="small" background="status-ok">Folgender Speicherort wurde eingegeben</CardHeader>
             <CardBody pad="medium">
                 <Table>
                     <TableBody>
+                        {formData.compilationTitle !== null && <TableRow>
+                            <TableCell>
+                                Zusammenstellung:
+                            </TableCell>
+                            <TableCell>
+                                {formData.compilationTitle}
+                            </TableCell>
+                        </TableRow>}
                         <TableRow>
                             <TableCell>
                                 Ort:
@@ -111,7 +146,8 @@ function ConfirmedInfoBox({formData, optionsMap, setIsConfirmed, setFormData}) {
                         ...formData, storageDivision: 0,
                         storageSubDivision: "",
                         compilationId: null,
-                        compilationTitle: null
+                        compilationTitle: null,
+                        storageDivisionName: ""
                     })
                     setIsConfirmed(false)
                 }

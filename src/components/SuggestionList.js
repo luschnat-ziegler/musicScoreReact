@@ -16,9 +16,19 @@ export default function SuggestionList({filteredData, formData, setFormData, cur
                 value={value}
                 onChange={(event) => {
                     setValue(event.target.value)
+                    if (type === "compilation") {
+                        let selectedItem = getSelectedItem(type, filteredData, currentData, event.target.value)
+                        setFormData({
+                            ...formData,
+                            compilationId: selectedItem.ID,
+                            storageDivision: selectedItem.StorageDivisionID,
+                            storageSubDivision: selectedItem.StorageSubDivision,
+                            compilationTitle: selectedItem.Title
+                        })
+                    }
                 }}
             />
-            <Button primary label="Hinzufügen" onClick={() => {
+            {type !== "compilation" && <Button primary label="Hinzufügen" onClick={() => {
                 if (value === "") {
                     return
                 }
@@ -28,7 +38,7 @@ export default function SuggestionList({filteredData, formData, setFormData, cur
                 setFormData({...formData, ...getDataForFormUpdate(type, currentFormData)})
                 setCurrentData(getResetInputObject(type))
             }
-            }/>
+            }/>}
         </Box>
     )
 }
@@ -40,6 +50,9 @@ function getLabel(item, type) {
     if (type === "tag") {
         return item.Content
     }
+    if (type === "compilation") {
+        return item.Title
+    }
 }
 
 function getNewCreationLabel(type) {
@@ -48,6 +61,9 @@ function getNewCreationLabel(type) {
     }
     if (type === "tag") {
         return "Bitte Tag neu anlegen"
+    }
+    if (type === "compilation") {
+        return "Bitte Zusammenstellung neu anlegen"
     }
 }
 
@@ -63,6 +79,14 @@ function getSelectedItem(type, filteredData, currentData, value) {
         return value !== "0" ? filteredData.find(tag => String(tag.ID) === value) : {
             ID: uuidv4(),
             Content: currentData
+        }
+    }
+    if (type === "compilation") {
+        return value !== "0" ? filteredData.find(compilation => String(compilation.ID) === value) : {
+            ID: null,
+            Title: currentData,
+            StorageDivisionID: 0,
+            StorageSubDivision: ""
         }
     }
 }

@@ -1,4 +1,4 @@
-import {Box, Button, TextInput} from "grommet";
+import {Box, Button, CheckBox, TextInput} from "grommet";
 import React, {useState} from "react";
 import {v4 as uuidv4} from 'uuid';
 import SuggestionList from "./SuggestionList";
@@ -17,17 +17,24 @@ export default function ComposerInput({existingData, formData, setFormData}) {
 
     return (
         <Box direction="column" gap="medium" width="large">
-            <TextInput
+            <CheckBox
+                checked={formData.noComposer}
+                label="Keine Angabe"
+                onChange={(event) => {
+                    setFormData({...formData, noComposer: event.target.checked})
+                }}
+            />
+            {!formData.noComposer && <TextInput
                 placeholder="Nachname"
                 value={currentComposerData.lastName}
                 onChange={(event) => setCurrentComposerData({...currentComposerData, lastName: event.target.value})}
-            />
-            <TextInput
+            />}
+            {!formData.noComposer && <TextInput
                 placeholder="Vorname"
                 value={currentComposerData.firstName}
                 onChange={(event) => setCurrentComposerData({...currentComposerData, firstName: event.target.value})}
-            />
-            {filteredComposers.length > 0 ?
+            />}
+            {!formData.noComposer && filteredComposers.length > 0 ?
                 <SuggestionList filteredData={filteredComposers} formData={formData} setFormData={setFormData}
                                 currentData={currentComposerData}
                                 setCurrentData={setCurrentComposerData} type={"composer"}/> :
@@ -45,7 +52,8 @@ export default function ComposerInput({existingData, formData, setFormData}) {
                     })
                 }
                 }/>)}
-            <AddedItemBox type={"composer"} formData={formData} setFormData={setFormData}/>
+            {!formData.noComposer &&
+                <AddedItemBox type={"composer"} formData={formData} setFormData={setFormData} isSummaryMode={false}/>}
         </Box>
     )
 }

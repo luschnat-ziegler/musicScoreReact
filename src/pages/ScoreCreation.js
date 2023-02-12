@@ -8,6 +8,7 @@ import StorageInput from "../components/StorageInput";
 import loadingReducer from "../reducer/loadingReducer";
 import getSuggestionData from "../services/GetSuggestionData";
 import {fetchFailure, fetchSuccess} from "../actions/loadingActions";
+import ScoreCreationSummary from "../components/ScoreCreationSummary";
 
 export default function ScoreCreation({data, dataChange, setDataChange}) {
     const [suggestionData, dispatchSuggestionData] = useReducer(loadingReducer, {
@@ -18,10 +19,12 @@ export default function ScoreCreation({data, dataChange, setDataChange}) {
 
     const [formData, setFormData] = useState({
         title: "",
+        noComposer: false,
         composers: [],
         category: 0,
         tags: [],
         storageDivision: 0,
+        storageDivisionName: "",
         storageSubDivision: "",
         compilationId: null,
         compilationTitle: null
@@ -66,12 +69,13 @@ export default function ScoreCreation({data, dataChange, setDataChange}) {
                     <Box pad="medium">
                         <StorageInput data={data} existingData={suggestionData.data[3]} formData={formData}
                                       setFormData={setFormData} isConfirmed={storageDivisionConfirmed}
-                                      setIsConfirmed={setStorageDivisionConfirmed}/>
+                                      setIsConfirmed={setStorageDivisionConfirmed}
+                                      compilationData={suggestionData.data[4]}/>
                     </Box>
                 </Tab>
                 <Tab title="Zusammenfassung">
                     <Box pad="medium">
-                        Zusammenfassung
+                        <ScoreCreationSummary formData={formData} storageDivisionConfirmed={storageDivisionConfirmed}/>
                     </Box>
                 </Tab>
             </Tabs>

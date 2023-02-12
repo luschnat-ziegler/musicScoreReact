@@ -2,35 +2,38 @@ import {Box, Button, Text} from "grommet";
 import React from "react";
 import {Close} from "grommet-icons";
 
-export default function AddedItemBox({formData, setFormData, type}) {
+export default function AddedItemBox({formData, setFormData, type, isSummaryMode}) {
     return (
         <Box direction="row" pad="small" gap="small" height={{min: "xxsmall"}} fill="horizontal" round="6px"
              border={{
-                 color: "grey",
+                 color: "gray",
                  size: "small",
                  side: "all"
              }}>
-            {getItems(type, formData, setFormData)}
+            {getItems(type, formData, setFormData, isSummaryMode)}
         </Box>
     )
 }
 
-function getItems(type, formData, setFormData) {
+function getItems(type, formData, setFormData, isSummaryMode) {
     if (type === "composer") {
         return formData.composers.map(composerItem => <Item key={composerItem.id} itemData={composerItem}
-                                                            formData={formData} setFormData={setFormData} type={type}/>)
+                                                            formData={formData} setFormData={setFormData} type={type}
+                                                            isSummaryMode={isSummaryMode}/>)
     }
     if (type === "tag") {
         return formData.tags.map(tagItem => <Item key={tagItem.id} itemData={tagItem} formData={formData}
-                                                  setFormData={setFormData} type={type}/>)
+                                                  setFormData={setFormData} type={type} isSummaryMode={isSummaryMode}/>)
     }
 }
 
-function Item({itemData, formData, setFormData, type}) {
+function Item({itemData, formData, setFormData, type, isSummaryMode}) {
+    const padding = isSummaryMode ? "xsmall" : {left: "small"}
     return (
-        <Box pad={{left: "small"}} align="center" background="accent-4" fill={false} round="6px" direction="row">
+        <Box pad={padding} align="center" background="accent-4" fill={false} round="6px" direction="row">
             <Text>{getText(itemData, type)}</Text>
-            <Button icon={<Close size="16px"/>} onClick={getOnClickCallback(type, formData, setFormData, itemData)}/>
+            {! isSummaryMode && <Button icon={<Close size="16px"/>}
+                                      onClick={getOnClickCallback(type, formData, setFormData, itemData)}/>}
         </Box>
     )
 }
@@ -42,6 +45,7 @@ function getText(itemData, type) {
     if (type === "tag") {
         return itemData.content
     }
+    return ""
 }
 
 function getOnClickCallback(type, formData, setFormData, itemData) {

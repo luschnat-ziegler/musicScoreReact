@@ -30,7 +30,7 @@ export default function TagInput({formData, setFormData, existingData}) {
                         setCurrentTagData("")
                     }
                     }/>)}
-            <AddedItemBox type={"tag"} setFormData={setFormData} formData={formData}/>
+            <AddedItemBox type={"tag"} setFormData={setFormData} formData={formData} isSummaryMode={false}/>
         </Box>
     )
 }
