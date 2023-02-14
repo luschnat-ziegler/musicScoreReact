@@ -13,6 +13,7 @@ import {Route, Routes} from "react-router-dom";
 import ScoreList from "./pages/ScoreList";
 import ListCreation from "./pages/ListCreation";
 import ScoreCreation from "./pages/ScoreCreation";
+import Login from "./pages/Login";
 
 const theme = {
     global: {
@@ -49,6 +50,7 @@ function App() {
             <Page>
                 <PageContent>
                     <Routes>
+                        <Route path="/login" element={<Login/>}/>
                         <Route path="/pdf" element={<ListCreation data={scores.data}/>}/>
                         <Route path="/" element={<ScoreList data={scores.data}/>}/>
                         <Route path="/create" element={<ScoreCreation data={scores.data} dataChange={dataChange}
