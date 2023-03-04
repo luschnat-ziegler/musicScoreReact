@@ -18,7 +18,7 @@ export function sortAbc(data) {
 
 function getComposers(item) {
     return item.Composers.reduce(
-        (accumulator, currentValue, index) => accumulator + currentValue.FirstName + " " + currentValue.LastName + (index === item.Composers.length - 1 ? "" : ", "),
+        (accumulator, currentValue, index) => accumulator + (currentValue.FirstName === null ? "" : currentValue.FirstName) + " " + currentValue.LastName + (index === item.Composers.length - 1 ? "" : ", "),
         ""
     )
 }

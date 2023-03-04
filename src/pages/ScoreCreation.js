@@ -8,8 +8,23 @@ import StorageInput from "../components/StorageInput";
 import loadingReducer from "../reducer/loadingReducer";
 import getSuggestionData from "../services/GetSuggestionData";
 import {fetchFailure, fetchSuccess} from "../actions/loadingActions";
-import ScoreCreationSummary from "../components/ScoreCreationSummary";
+import ScoreCreationSummary, {getAllComplete} from "../components/ScoreCreationSummary";
 import postingReducer from "../reducer/postingReducer";
+import submitScore from "../services/SubmitScore";
+import {postFailure, postInit, postSuccess} from "../actions/postingActions";
+
+const defaultFormData = {
+    title: "",
+    noComposer: false,
+    composers: [],
+    category: 0,
+    tags: [],
+    storageDivision: 0,
+    storageDivisionName: "",
+    storageSubDivision: "",
+    compilationId: null,
+    compilationTitle: null
+}
 
 export default function ScoreCreation({data, dataChange, setDataChange}) {
     const [suggestionData, dispatchSuggestionData] = useReducer(loadingReducer, {
@@ -23,18 +38,7 @@ export default function ScoreCreation({data, dataChange, setDataChange}) {
         isError: false,
     })
 
-    const [formData, setFormData] = useState({
-        title: "",
-        noComposer: false,
-        composers: [],
-        category: 0,
-        tags: [],
-        storageDivision: 0,
-        storageDivisionName: "",
-        storageSubDivision: "",
-        compilationId: null,
-        compilationTitle: null
-    })
+    const [formData, setFormData] = useState(defaultFormData)
     const [storageDivisionConfirmed, setStorageDivisionConfirmed] = useState(false)
 
     useEffect(() => {
@@ -47,7 +51,19 @@ export default function ScoreCreation({data, dataChange, setDataChange}) {
     }, [dataChange])
 
     const submitCallback = () => {
-
+        if (!getAllComplete(formData, storageDivisionConfirmed)) {
+            return
+        }
+        dispatchSubmissionStatus({type: postInit})
+        submitScore(formData).then(response => {
+            if (response.id !== undefined) {
+                setDataChange(!dataChange)
+                setFormData(defaultFormData)
+                dispatchSubmissionStatus({type: postSuccess})
+            } else {
+                dispatchSubmissionStatus({type: postFailure})
+            }
+        })
     }
 
     return (
@@ -88,7 +104,8 @@ export default function ScoreCreation({data, dataChange, setDataChange}) {
                     <Tab title="Zusammenfassung">
                         <Box pad="medium">
                             <ScoreCreationSummary formData={formData}
-                                                  storageDivisionConfirmed={storageDivisionConfirmed}/>
+                                                  storageDivisionConfirmed={storageDivisionConfirmed}
+                                                  submitCallback={submitCallback}/>
                         </Box>
                     </Tab>
                 </Tabs>}

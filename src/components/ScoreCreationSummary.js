@@ -3,13 +3,14 @@ import {StatusCritical, StatusGood} from 'grommet-icons';
 import AddedItemBox from "./AddeditemsBox";
 import {Button} from "grommet/es6";
 
-export default function ScoreCreationSummary({formData, storageDivisionConfirmed}) {
-    const boxes = ["title", "composer", "category", "tag", "storageLocation"]
+const boxes = ["title", "composer", "category", "tag", "storageLocation"]
+
+export default function ScoreCreationSummary({formData, storageDivisionConfirmed, submitCallback}) {
     return (
         <Box direction="column" gap="medium" width="large">
             {boxes.map(boxTitle => <SummaryBox key={boxTitle} type={boxTitle} formData={formData}
                                                confirmed={boxTitle === "storageLocation" ? storageDivisionConfirmed : false}/>)}
-            <Button primary label="Absenden"/>
+            <Button primary label="Absenden" onClick={submitCallback}/>
         </Box>
     )
 }
@@ -73,13 +74,14 @@ function getIsComplete(type, formData, confirmed) {
     return true
 }
 
-function getAllComplete(boxes, formData, storageConfirmed) {
+export function getAllComplete(formData, storageConfirmed) {
+    let isOk = true
     boxes.forEach(box => {
         if (!getIsComplete(box, formData, storageConfirmed)) {
-            return false
+            isOk = false
         }
     })
-    return true
+    return isOk
 }
 
 function getTitle(type) {
