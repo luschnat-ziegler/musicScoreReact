@@ -1,7 +1,6 @@
 import DataTable from "react-data-table-component";
-import {Box, Text, Grid, TextInput, DropButton, Heading, Button, CheckBox} from "grommet";
+import {Box, Text, Grid, TextInput, DropButton, Heading, Button, CheckBox, Spinner} from "grommet";
 import React, {useState} from "react";
-import styled from "styled-components";
 import {Close, FormDown} from "grommet-icons";
 
 const align = {top: 'bottom'};
@@ -22,7 +21,8 @@ export const tColumns = [
         selector: row => row.StorageDivision + ", " + row.StorageSubDivision,
     },
 ];
-export default function ScoreList({data}) {
+export default function ScoreList({scoreData}) {
+    const data = scoreData.data
     const [value, setValue] = useState('')
     const [open, setOpen] = useState(false);
     const onOpen = () => {
@@ -44,56 +44,59 @@ export default function ScoreList({data}) {
     );
     return (
         <>
-            <Grid columns={['2/3', '1/3']} gap="small" pad="medium">
-                <TextInput placeholder="Nach Titel filtern"
-                           value={value}
-                           onChange={event => {
-                               setValue(event.target.value)
-                           }}
-                />
-                <DropButton
-                    open={open}
-                    onClose={onClose}
-                    onOpen={onOpen}
-                    dropContent={<Box pad="small">
-                        <Box gap="small" direction="row" justify="between" align="center">
-                            <Heading level={4} margin="small">
-                                Filteroptionen
-                            </Heading>
-                            <Button icon={<Close/>} onClick={onClose}/>
-                        </Box>
-                        <CheckBox
-                            checked={filterOptions.title}
-                            label="Titel"
-                            onChange={(event) => {
-                                setFilterOptions({
-                                    ...filterOptions,
-                                    title: event.target.checked
-                                })
-                            }}
+            {scoreData.isLoading ? <Spinner/> :
+                <>
+                    <Grid columns={['2/3', '1/3']} gap="small" pad="medium">
+                        <TextInput placeholder="Nach Titel filtern"
+                                   value={value}
+                                   onChange={event => {
+                                       setValue(event.target.value)
+                                   }}
                         />
-                        <CheckBox
-                            checked={filterOptions.composer}
-                            label="Komponist"
-                            onChange={(event) => {
-                                setFilterOptions({
-                                    ...filterOptions,
-                                    composer: event.target.checked
-                                })
-                            }}
-                        />
-                    </Box>}
-                    dropProps={{align}}
-                >
-                    <Box direction="row" gap="medium" align="center" pad="small">
-                        <Text>
-                            Optionen
-                        </Text>
-                        <FormDown color="brand"/>
-                    </Box>
-                </DropButton>
-            </Grid>
-            <DataTable columns={tColumns} data={filteredItems} pagination/>
+                        <DropButton
+                            open={open}
+                            onClose={onClose}
+                            onOpen={onOpen}
+                            dropContent={<Box pad="small">
+                                <Box gap="small" direction="row" justify="between" align="center">
+                                    <Heading level={4} margin="small">
+                                        Filteroptionen
+                                    </Heading>
+                                    <Button icon={<Close/>} onClick={onClose}/>
+                                </Box>
+                                <CheckBox
+                                    checked={filterOptions.title}
+                                    label="Titel"
+                                    onChange={(event) => {
+                                        setFilterOptions({
+                                            ...filterOptions,
+                                            title: event.target.checked
+                                        })
+                                    }}
+                                />
+                                <CheckBox
+                                    checked={filterOptions.composer}
+                                    label="Komponist"
+                                    onChange={(event) => {
+                                        setFilterOptions({
+                                            ...filterOptions,
+                                            composer: event.target.checked
+                                        })
+                                    }}
+                                />
+                            </Box>}
+                            dropProps={{align}}
+                        >
+                            <Box direction="row" gap="medium" align="center" pad="small">
+                                <Text>
+                                    Optionen
+                                </Text>
+                                <FormDown color="brand"/>
+                            </Box>
+                        </DropButton>
+                    </Grid>
+                    <DataTable columns={tColumns} data={filteredItems} pagination/>
+                </>}
         </>
     )
 }

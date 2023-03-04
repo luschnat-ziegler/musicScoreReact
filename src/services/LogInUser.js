@@ -1,7 +1,6 @@
 
 export default function logInUser(data, apiFetch = fetch) {
-    const apiBaseUrl = "http://localhost:8080"
-    return apiFetch(`${apiBaseUrl}/login`, {
+    return apiFetch(`${process.env.REACT_APP_API_BASE_URL}/login`, {
         method: 'post',
         body: JSON.stringify(data),
     }).then((response) => response.json())

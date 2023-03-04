@@ -1,4 +1,4 @@
-import {Box, Tab, Tabs} from "grommet";
+import {Box, Spinner, Tab, Tabs} from "grommet";
 import TitleInput from "../components/TitleInput";
 import {useEffect, useReducer, useState} from "react";
 import ComposerInput from "../components/ComposerInput";
@@ -9,11 +9,17 @@ import loadingReducer from "../reducer/loadingReducer";
 import getSuggestionData from "../services/GetSuggestionData";
 import {fetchFailure, fetchSuccess} from "../actions/loadingActions";
 import ScoreCreationSummary from "../components/ScoreCreationSummary";
+import postingReducer from "../reducer/postingReducer";
 
 export default function ScoreCreation({data, dataChange, setDataChange}) {
     const [suggestionData, dispatchSuggestionData] = useReducer(loadingReducer, {
         data: [],
         isLoading: false,
+        isError: false,
+    })
+
+    const [submissionStatus, dispatchSubmissionStatus] = useReducer(postingReducer, {
+        isPosting: false,
         isError: false,
     })
 
@@ -40,45 +46,52 @@ export default function ScoreCreation({data, dataChange, setDataChange}) {
         }).catch(() => dispatchSuggestionData({type: fetchFailure}))
     }, [dataChange])
 
+    const submitCallback = () => {
+
+    }
+
     return (
         <Box pad="medium" align="center">
-            <Tabs>
-                <Tab title="Titel">
-                    <Box pad="medium">
-                        <TitleInput data={data} formData={formData} setFormData={setFormData}/>
-                    </Box>
-                </Tab>
-                <Tab title="Komponist(en)">
-                    <Box pad="medium">
-                        <ComposerInput formData={formData} setFormData={setFormData}
-                                       existingData={suggestionData.data[0]}/>
-                    </Box>
-                </Tab>
-                <Tab title="Kategorie">
-                    <Box pad="medium">
-                        <CategoryInput formData={formData} setFormData={setFormData}
-                                       existingData={suggestionData.data[1]}/>
-                    </Box>
-                </Tab>
-                <Tab title="Tags">
-                    <Box pad="medium">
-                        <TagInput formData={formData} setFormData={setFormData} existingData={suggestionData.data[2]}/>
-                    </Box>
-                </Tab>
-                <Tab title="Lagerort">
-                    <Box pad="medium">
-                        <StorageInput data={data} existingData={suggestionData.data[3]} formData={formData}
-                                      setFormData={setFormData} isConfirmed={storageDivisionConfirmed}
-                                      setIsConfirmed={setStorageDivisionConfirmed}
-                                      compilationData={suggestionData.data[4]}/>
-                    </Box>
-                </Tab>
-                <Tab title="Zusammenfassung">
-                    <Box pad="medium">
-                        <ScoreCreationSummary formData={formData} storageDivisionConfirmed={storageDivisionConfirmed}/>
-                    </Box>
-                </Tab>
-            </Tabs>
+            {submissionStatus.isPosting || suggestionData.isLoading ? <Spinner size="medium"/> :
+                <Tabs>
+                    <Tab title="Titel">
+                        <Box pad="medium">
+                            <TitleInput data={data} formData={formData} setFormData={setFormData}/>
+                        </Box>
+                    </Tab>
+                    <Tab title="Komponist(en)">
+                        <Box pad="medium">
+                            <ComposerInput formData={formData} setFormData={setFormData}
+                                           existingData={suggestionData.data[0]}/>
+                        </Box>
+                    </Tab>
+                    <Tab title="Kategorie">
+                        <Box pad="medium">
+                            <CategoryInput formData={formData} setFormData={setFormData}
+                                           existingData={suggestionData.data[1]}/>
+                        </Box>
+                    </Tab>
+                    <Tab title="Tags">
+                        <Box pad="medium">
+                            <TagInput formData={formData} setFormData={setFormData}
+                                      existingData={suggestionData.data[2]}/>
+                        </Box>
+                    </Tab>
+                    <Tab title="Lagerort">
+                        <Box pad="medium">
+                            <StorageInput data={data} existingData={suggestionData.data[3]} formData={formData}
+                                          setFormData={setFormData} isConfirmed={storageDivisionConfirmed}
+                                          setIsConfirmed={setStorageDivisionConfirmed}
+                                          compilationData={suggestionData.data[4]}/>
+                        </Box>
+                    </Tab>
+                    <Tab title="Zusammenfassung">
+                        <Box pad="medium">
+                            <ScoreCreationSummary formData={formData}
+                                                  storageDivisionConfirmed={storageDivisionConfirmed}/>
+                        </Box>
+                    </Tab>
+                </Tabs>}
         </Box>
     )
 }

@@ -1,5 +1,5 @@
 import {Box, Button, CheckBox, TextInput} from "grommet";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {v4 as uuidv4} from 'uuid';
 import SuggestionList from "./SuggestionList";
 import AddedItemBox from "./AddeditemsBox";

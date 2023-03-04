@@ -1,11 +1,13 @@
-export default function getSuggestionData(apiFetch = fetch) {
-    const apiBaseUrl = "http://localhost:8080"
+import {getHeader} from "./GetScores";
 
-    const composerPromise = apiFetch(`${apiBaseUrl}/composers`).then((result) => result.json())
-    const categoryPromise = apiFetch(`${apiBaseUrl}/categories`).then((result) => result.json())
-    const tagPromise = apiFetch(`${apiBaseUrl}/tags`).then((result) => result.json())
-    const storageDivisionPromise = apiFetch(`${apiBaseUrl}/divisions`).then((result) => result.json())
-    const compilationPromise = apiFetch(`${apiBaseUrl}/compilations`).then((result) => result.json())
+export default function getSuggestionData(apiFetch = fetch) {
+    const apiBaseUrl = process.env.REACT_APP_API_BASE_URL
+
+    const composerPromise = apiFetch(`${apiBaseUrl}/composers`, getHeader()).then((result) => result.json())
+    const categoryPromise = apiFetch(`${apiBaseUrl}/categories`, getHeader()).then((result) => result.json())
+    const tagPromise = apiFetch(`${apiBaseUrl}/tags`, getHeader()).then((result) => result.json())
+    const storageDivisionPromise = apiFetch(`${apiBaseUrl}/divisions`, getHeader()).then((result) => result.json())
+    const compilationPromise = apiFetch(`${apiBaseUrl}/compilations`, getHeader()).then((result) => result.json())
 
     return Promise.all([composerPromise, categoryPromise, tagPromise, storageDivisionPromise, compilationPromise])
 }
