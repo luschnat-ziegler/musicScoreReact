@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {Box, Button, TextInput} from "grommet";
-import SuggestionList from "./SuggestionList";
+import SuggestionList, {checkDuplication} from "./SuggestionList";
 import {v4 as uuidv4} from "uuid";
 import AddedItemBox from "./AddeditemsBox";
 
@@ -21,6 +21,9 @@ export default function TagInput({formData, setFormData, existingData}) {
                                 setCurrentData={setCurrentTagData}
                                 type={"tag"}/> : (currentTagData !== "" &&
                     <Button primary label="Hinzufügen" onClick={() => {
+                        if (checkDuplication(formData, currentTagData, "tag")) {
+                            return
+                        }
                         let previousTagData = formData.tags
                         previousTagData.push({
                             content: currentTagData,

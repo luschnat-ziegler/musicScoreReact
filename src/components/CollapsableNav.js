@@ -1,13 +1,12 @@
 import React from 'react';
 
 import {Box, Header, Menu, Nav, ResponsiveContext} from 'grommet';
-import {Link} from "react-router-dom";
-import styled from "styled-components";
+import {StyledLink} from "./StyledLink";
 
 const CollapsableNav = () => (
     <Header background="neutral-3" pad="medium">
         <Box direction="row" align="center" gap="small">
-            GV Hofbieber Notenmanagement
+            Notenverwaltung
         </Box>
         <ResponsiveContext.Consumer>
             {(responsive) =>
@@ -42,10 +41,3 @@ const CollapsableNav = () => (
 );
 
 export const Collapsable = () => <CollapsableNav/>;
-
-const StyledLink = styled(Link)`
-  color: White;
-  text-decoration: none;
-  margin: .5rem;
-  position: relative;
-`;

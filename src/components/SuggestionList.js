@@ -29,7 +29,7 @@ export default function SuggestionList({filteredData, formData, setFormData, cur
                 }}
             />
             {type !== "compilation" && <Button primary label="Hinzufügen" onClick={() => {
-                if (value === "") {
+                if (value === "" || checkDuplication(formData, currentData, type)) {
                     return
                 }
                 const addedItem = getSelectedItem(type, filteredData, currentData, value)
@@ -134,5 +134,14 @@ function getResetInputObject(type) {
     }
     if (type === "tag") {
         return ""
+    }
+}
+
+export function checkDuplication(formData, currentData, type) {
+    if (type === "composer") {
+        return formData.composers.findIndex(composer => (composer.firstName.toLowerCase() === currentData.firstName.toLowerCase() && composer.lastName.toLowerCase() === currentData.lastName.toLowerCase())) !== -1
+    }
+    if (type === "tag") {
+        return formData.tags.findIndex(tag => tag.content.toLowerCase() === currentData.toLowerCase()) !== -1
     }
 }

@@ -1,7 +1,7 @@
 import {Box, Button, CheckBox, TextInput} from "grommet";
 import React, {useEffect, useState} from "react";
 import {v4 as uuidv4} from 'uuid';
-import SuggestionList from "./SuggestionList";
+import SuggestionList, {checkDuplication} from "./SuggestionList";
 import AddedItemBox from "./AddeditemsBox";
 
 export default function ComposerInput({existingData, formData, setFormData}) {
@@ -11,7 +11,7 @@ export default function ComposerInput({existingData, formData, setFormData}) {
     })
     const filteredComposers = existingData.filter(item => {
         let partialLastMatch = currentComposerData.lastName.length > 1 && item.LastName.toLowerCase().startsWith(currentComposerData.lastName.toLowerCase())
-        let partialFirstMatch = currentComposerData.firstName.length > 0 ? item.FirstName.toLowerCase().startsWith(currentComposerData.firstName.toLowerCase()) : true
+        let partialFirstMatch = currentComposerData.firstName.length > 0 ? (item.FirstName ?? "").toLowerCase().startsWith(currentComposerData.firstName.toLowerCase()) : true
         return partialLastMatch && partialFirstMatch
     })
 
@@ -39,6 +39,9 @@ export default function ComposerInput({existingData, formData, setFormData}) {
                                 currentData={currentComposerData}
                                 setCurrentData={setCurrentComposerData} type={"composer"}/> :
                 (currentComposerData.lastName !== "" && <Button primary label="Hinzufügen" onClick={() => {
+                    if (checkDuplication(formData, currentComposerData, "composer")) {
+                        return
+                    }
                     let previousComposerData = formData.composers
                     previousComposerData.push({
                         firstName: currentComposerData.firstName,
